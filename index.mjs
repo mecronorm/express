@@ -1,13 +1,14 @@
 import express from "express"
-import food from "./food.mjs"
+import {food, visitations} from "./food.mjs"
 import dotenv from "dotenv"
 
 dotenv.config()
 
+console.log(visitations);
+
 const app = express()
 
 app.use(express.json())
-
 
 function authentication(req,res,next) {
     const providedKey = req.headers['x-api-key']
@@ -26,8 +27,14 @@ app.get("/", (req, res)=>{
 })
 
 app.get("/favorites", (req,res)=>{
-    const favorites = food.filter(item=> item.favorite === true)
-    res.send(favorites)
+    visitations.sort((a,b) => b.count - a.count)
+    const topTen = visitations.slice(0,10)
+    let shownTopTen = []
+    topTen.forEach(item => {
+        const favoriteFoodItem = food.find(fooditem => fooditem.name === item.name)
+        shownTopTen.push(favoriteFoodItem)
+    });
+    res.send(shownTopTen)
 })
 
 app.get("/:name", (req,res,next)=>{
@@ -37,6 +44,8 @@ app.get("/:name", (req,res,next)=>{
     if (!foodItem) {
         next()
       }
+    visitations.find(item => item.name === foodItem.name).count++
+    console.log(visitations);
     res.send(foodItem)
 })
 

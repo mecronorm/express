@@ -505,7 +505,7 @@ const food = [
             "Add everything else, give it a good stir then simmer for 20 minutes minimum (midweek), up to 3 hours (weekend indulgence!). Slow cooking makes the beef incredibly tender and the sauce develops extra flavour."
         ],
         cuisine: "Italian",
-        favorite: True
+        favorite: true
     },
     {
         name: "Lunchbox Pizza Bread",
@@ -589,5 +589,17 @@ const food = [
     },
 ]
 
+let visitations = []
+
+food.forEach(fooditem => {
+    const visitationItem = {
+        name: fooditem.name,
+        count: 0
+    }
+
+    visitations.push(visitationItem)
+});
+
+export {food, visitations}
 
 export default food
